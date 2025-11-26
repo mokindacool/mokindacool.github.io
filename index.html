@@ -227,6 +227,39 @@
       border: 1px solid rgba(0, 191, 165, 0.3);
     }
 
+    /* Project Filters */
+    .project-filters {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .filter-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.6rem 1.2rem;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .filter-btn:hover {
+      background: rgba(0, 191, 165, 0.2);
+      border-color: #00bfa5;
+      color: #00bfa5;
+    }
+
+    .filter-btn.active {
+      background: #00bfa5;
+      color: #ffffff;
+      border-color: #00bfa5;
+    }
+
     /* Projects Grid */
     .projects-grid {
       display: grid;
@@ -241,7 +274,11 @@
       padding: 2rem;
       border-radius: 12px;
       border-left: 4px solid #00bfa5;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+    }
+
+    .project.hidden {
+      display: none;
     }
 
     .project:hover {
@@ -423,7 +460,105 @@
     <!-- Experience Section -->
     <section id="experience">
       <h2 class="section-title">Professional Experience</h2>
-      
+
+      <div class="experience-item">
+        <div class="company-name">Vectorly</div>
+        <div class="job-title">Full-Stack Developer | Present</div>
+        <ul>
+          <li>Engineered a full-stack web application for interview preparation, implementing reusable components and RESTful APIs, supporting 1K+ users in early testing with <250ms average response times</li>
+          <li>Built and optimized ETL pipelines in Python and SQL, automating data cleaning, transformation, and loading of financial records, improving processing efficiency by 60%</li>
+        </ul>
+        <div class="tech-stack">
+          <span class="tech-tag">React</span>
+          <span class="tech-tag">Node.js</span>
+          <span class="tech-tag">PostgreSQL</span>
+          <span class="tech-tag">REST APIs</span>
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">SQL</span>
+        </div>
+      </div>
+
+      <div class="experience-item">
+        <div class="company-name">DoorDash</div>
+        <div class="job-title">Personalized Consumption Insights Engine (Contract)</div>
+        <ul>
+          <li>Developed feature pipelines analyzing customer spend, cuisine diversity, delivery-time savings, and ordering rhythms to generate personalized end-of-year recommendations</li>
+          <li>Applied clustering and ranking heuristics to determine each user's "top cuisines" and "most frequent restaurants," improving relevance for personalized summaries</li>
+          <li>Designed scalable logic for ranking and selecting insights, similar to recommendation system candidate-generation and feature-importance workflows</li>
+        </ul>
+        <div class="tech-stack">
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">Clustering</span>
+          <span class="tech-tag">Recommendation Systems</span>
+          <span class="tech-tag">Feature Engineering</span>
+        </div>
+      </div>
+
+      <div class="experience-item">
+        <div class="company-name">ASUC OCFO (Data & Modeling Team)</div>
+        <div class="job-title">Data Engineer | Sept. 2024 - Present</div>
+        <ul>
+          <li>Built and optimized ETL pipelines in Python and SQL, automating data cleaning, transformation, and loading of financial records, improving processing efficiency by 60%</li>
+          <li>Implemented a PDF processor to standardize Excel inputs into 9+ unified schema fields, enhancing data consistency and accessibility</li>
+        </ul>
+        <div class="tech-stack">
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">SQL</span>
+          <span class="tech-tag">ETL</span>
+          <span class="tech-tag">PDF Processing</span>
+          <span class="tech-tag">Data Modeling</span>
+        </div>
+      </div>
+
+      <div class="experience-item">
+        <div class="company-name">USC Alfred E. Mann Institute</div>
+        <div class="job-title">Data Engineering Intern</div>
+        <ul>
+          <li>Engineered a geospatial ETL pipeline to ingest, clean, and standardize LA County's COVID-19 workplace-exposure datasets; integrated restaurant, employee count, and location metadata into a unified data model</li>
+          <li>Implemented geofencing logic to return all restaurants within a 2-mile radius and dynamically served exposure statistics through API-driven UI components</li>
+          <li>Automated data refresh workflows to continuously update exposure numbers and maintain accuracy during rapidly evolving COVID-19 conditions</li>
+        </ul>
+        <div class="tech-stack">
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">ETL</span>
+          <span class="tech-tag">Geospatial Analysis</span>
+          <span class="tech-tag">APIs</span>
+          <span class="tech-tag">Data Pipelines</span>
+        </div>
+      </div>
+
+      <div class="experience-item">
+        <div class="company-name">Smart Ballot</div>
+        <div class="job-title">Full-Stack Developer</div>
+        <ul>
+          <li>Built a React + Flask tool that lets voters view local candidates by zip code, promoting civic engagement through accessible technology</li>
+          <li>Integrated external APIs to fetch real-time candidate information and display it in an intuitive, user-friendly interface</li>
+        </ul>
+        <div class="tech-stack">
+          <span class="tech-tag">React.js</span>
+          <span class="tech-tag">Flask</span>
+          <span class="tech-tag">JavaScript</span>
+          <span class="tech-tag">APIs</span>
+          <span class="tech-tag">Python</span>
+        </div>
+      </div>
+
+      <div class="experience-item">
+        <div class="company-name">Afterwork</div>
+        <div class="job-title">Data Engineering Intern | June 2023 - Aug 2023</div>
+        <ul>
+          <li>Developed machine learning techniques (k-means, decision trees, PCA, logistic regression) to perform unsupervised customer segmentation analysis on 200,000+ users, increasing product penetration by 10%</li>
+          <li>Built customer profiles of distinct user groups, enhancing targeted marketing strategies and improving user engagement by 15%</li>
+        </ul>
+        <div class="tech-stack">
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">Machine Learning</span>
+          <span class="tech-tag">K-means</span>
+          <span class="tech-tag">PCA</span>
+          <span class="tech-tag">Customer Segmentation</span>
+        </div>
+      </div>
+
       <div class="experience-item">
         <div class="company-name">UC Berkeley</div>
         <div class="job-title">Data Science Research & Projects</div>
@@ -447,8 +582,18 @@
     <!-- Projects Section -->
     <section id="projects">
       <h2 class="section-title">Projects</h2>
+
+      <!-- Filter Buttons -->
+      <div class="project-filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="machine-learning">Machine Learning</button>
+        <button class="filter-btn" data-filter="full-stack">Full-Stack</button>
+        <button class="filter-btn" data-filter="data-engineering">Data Engineering</button>
+        <button class="filter-btn" data-filter="competitions">Competitions</button>
+      </div>
+
       <div class="projects-grid">
-        <div class="project">
+        <div class="project" data-category="machine-learning">
           <h3>Maximus AI Hedge Fund</h3>
           <p>AI-native hedge fund system composed of autonomous agents using LLMs for trading decisions, combining financial analysis with cutting-edge AI technology.</p>
           <div class="tech-stack">
@@ -459,20 +604,8 @@
           </div>
           <a href="https://github.com/mokindacool/maximus" class="project-link">🔗 GitHub</a>
         </div>
-        
-        <div class="project">
-          <h3>Smart Ballot</h3>
-          <p>A React + Flask tool that lets voters view local candidates by zip code, promoting civic engagement through accessible technology.</p>
-          <div class="tech-stack">
-            <span class="tech-tag">React.js</span>
-            <span class="tech-tag">Flask</span>
-            <span class="tech-tag">JavaScript</span>
-            <span class="tech-tag">APIs</span>
-          </div>
-          <a href="https://github.com/mokindacool/smart-ballot" class="project-link">🔗 GitHub</a>
-        </div>
-        
-        <div class="project">
+
+        <div class="project" data-category="machine-learning">
           <h3>Spam & Ham Classifier</h3>
           <p>Machine learning classifier using logistic regression to detect spam emails. Extracted features from over 8,000 emails and achieved 87% accuracy.</p>
           <div class="tech-stack">
@@ -481,8 +614,8 @@
             <span class="tech-tag">Feature Engineering</span>
           </div>
         </div>
-        
-        <div class="project">
+
+        <div class="project" data-category="machine-learning">
           <h3>Housing Price Predictor</h3>
           <p>Linear regression model predicting home prices in Cook County. Addressed fairness and ethical taxation issues through statistical analysis.</p>
           <div class="tech-stack">
@@ -492,7 +625,7 @@
           </div>
         </div>
 
-        <div class="project">
+        <div class="project" data-category="machine-learning">
           <h3>Black Jack Simulator</h3>
           <p>Created a simulator to test the theory of Genetic Algorithm and practicing basic card counting</p>
           <div class="tech-stack">
@@ -503,29 +636,7 @@
           <a href="https://mokindacool.github.io/blackjack/" class="project-link">🔗 GitHub</a>
         </div>
 
-        <div class="project">
-          <h3>Vectorly</h3>
-          <p>Engineered a full-stack web application for interview preparation with reusable components and RESTful APIs. Supports 1K+ users in early testing with <250ms average response times.</p>
-          <div class="tech-stack">
-            <span class="tech-tag">React</span>
-            <span class="tech-tag">Node.js</span>
-            <span class="tech-tag">PostgreSQL</span>
-            <span class="tech-tag">REST APIs</span>
-          </div>
-        </div>
-
-        <div class="project">
-          <h3>DoorDash — Personalized Consumption Insights Engine</h3>
-          <p>Developed feature pipelines analyzing customer spend, cuisine diversity, delivery-time savings, and ordering rhythms to generate personalized end-of-year recommendations. Applied clustering and ranking heuristics to determine top cuisines and most frequent restaurants.</p>
-          <div class="tech-stack">
-            <span class="tech-tag">Python</span>
-            <span class="tech-tag">Clustering</span>
-            <span class="tech-tag">Recommendation Systems</span>
-            <span class="tech-tag">Feature Engineering</span>
-          </div>
-        </div>
-
-        <div class="project">
+        <div class="project" data-category="machine-learning">
           <h3>LSTM-Based Text Generation Model</h3>
           <p>Developed a character-level LSTM language model for next-character prediction, implementing a full training pipeline with sequence generation, hyperparameter tuning, and train/validation monitoring.</p>
           <div class="tech-stack">
@@ -536,7 +647,7 @@
           </div>
         </div>
 
-        <div class="project">
+        <div class="project" data-category="data-engineering">
           <h3>Yelp NoSQL vs SQL Data Processing Project</h3>
           <p>Analyzed and transformed semi-structured Yelp and college athletics datasets across MongoDB, Postgres, and Pandas, focusing on document modeling, performance optimization, and large-scale joins. Benchmarked NoSQL vs SQL join performance, showing Postgres outperforming MongoDB by two orders of magnitude.</p>
           <div class="tech-stack">
@@ -548,7 +659,7 @@
           </div>
         </div>
 
-        <div class="project">
+        <div class="project" data-category="machine-learning competitions">
           <h3>Commodity Forecasting Challenge</h3>
           <p>Developed time-series forecasting models (XGBoost, LightGBM, LSTM) on multi-market data from LME, JPX, US Stocks, and Forex. Achieved top 15% cross-validation score on Kaggle competition leaderboard.</p>
           <div class="tech-stack">
@@ -559,7 +670,7 @@
           </div>
         </div>
 
-        <div class="project">
+        <div class="project" data-category="machine-learning data-engineering">
           <h3>Predictive Housing Analytics in Cook County</h3>
           <p>Conducted data preprocessing and exploratory analysis on 200K+ housing records. Designed feature engineering pipelines with one-hot encoding and derived variables to optimize linear regression modeling.</p>
           <div class="tech-stack">
@@ -619,5 +730,35 @@
       <p>&copy; 2025 Mohamed Ganda. Built with passion for data and design.</p>
     </footer>
   </div>
+
+  <script>
+    // Project filtering functionality
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const projects = document.querySelectorAll('.project');
+
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Remove active class from all buttons
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        // Add active class to clicked button
+        button.classList.add('active');
+
+        const filterValue = button.getAttribute('data-filter');
+
+        projects.forEach(project => {
+          if (filterValue === 'all') {
+            project.classList.remove('hidden');
+          } else {
+            const categories = project.getAttribute('data-category');
+            if (categories && categories.includes(filterValue)) {
+              project.classList.remove('hidden');
+            } else {
+              project.classList.add('hidden');
+            }
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>
