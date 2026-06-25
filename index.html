@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-ancestors 'none';">
   <title>Mohamed Ganda | Data Science Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -430,7 +431,19 @@
         <li><a href="#skills">skills</a></li>
         <li><a href="#contact">contact</a></li>
       </ul>
+      <a href="#" class="login-btn" id="login-btn">Login</a>
     </nav>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="login-modal-overlay" style="display:none;">
+      <div class="login-modal-card">
+        <h2 class="login-modal-title">Dashboard Login</h2>
+        <input type="password" id="login-password" class="login-input" placeholder="Enter password" />
+        <p id="login-error" class="login-error" style="display:none;">Incorrect password. Try again.</p>
+        <button id="login-submit" class="login-submit-btn">Enter</button>
+        <button id="login-cancel" class="login-cancel-btn">Cancel</button>
+      </div>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -463,92 +476,43 @@
 
       <div class="experience-item">
         <div class="company-name">Vectorly</div>
-        <div class="job-title">Full-Stack Developer | Present</div>
+        <div class="job-title">Full Stack Developer | Aug 2025 – April 2026</div>
         <ul>
-          <li>Engineered a full-stack web application for interview preparation, implementing reusable components and RESTful APIs, supporting 1K+ users in early testing with <250ms average response times</li>
-          <li>Built and optimized ETL pipelines in Python and SQL, automating data cleaning, transformation, and loading of financial records, improving processing efficiency by 60%</li>
+          <li>Engineered a full-stack web app using React (component-based architecture) and FastAPI, optimizing backend performance via database indexing for 1K early users</li>
+          <li>Built and optimized Python/SQL ETL pipelines for Vectorly's production platform using modular, AI-assisted code to automate data cleaning and transformation, improving compute efficiency by 60%</li>
         </ul>
         <div class="tech-stack">
           <span class="tech-tag">React</span>
-          <span class="tech-tag">Node.js</span>
-          <span class="tech-tag">PostgreSQL</span>
-          <span class="tech-tag">REST APIs</span>
+          <span class="tech-tag">FastAPI</span>
           <span class="tech-tag">Python</span>
           <span class="tech-tag">SQL</span>
+          <span class="tech-tag">ETL</span>
         </div>
       </div>
 
       <div class="experience-item">
-        <div class="company-name">DoorDash</div>
-        <div class="job-title">Personalized Consumption Insights Engine (Contract)</div>
+        <div class="company-name">Student Government (Data and Modeling Team)</div>
+        <div class="job-title">Data Engineer | Sept 2024 – May 2026</div>
         <ul>
-          <li>Developed feature pipelines analyzing customer spend, cuisine diversity, delivery-time savings, and ordering rhythms to generate personalized end-of-year recommendations</li>
-          <li>Applied clustering and ranking heuristics to determine each user's "top cuisines" and "most frequent restaurants," improving relevance for personalized summaries</li>
-          <li>Designed scalable logic for ranking and selecting insights, similar to recommendation system candidate-generation and feature-importance workflows</li>
-        </ul>
-        <div class="tech-stack">
-          <span class="tech-tag">Python</span>
-          <span class="tech-tag">Clustering</span>
-          <span class="tech-tag">Recommendation Systems</span>
-          <span class="tech-tag">Feature Engineering</span>
-        </div>
-      </div>
-
-      <div class="experience-item">
-        <div class="company-name">ASUC OCFO (Data & Modeling Team)</div>
-        <div class="job-title">Data Engineer | Sept. 2024 - Present</div>
-        <ul>
-          <li>Built and optimized ETL pipelines in Python and SQL, automating data cleaning, transformation, and loading of financial records, improving processing efficiency by 60%</li>
-          <li>Implemented a PDF processor to standardize Excel inputs into 9+ unified schema fields, enhancing data consistency and accessibility</li>
+          <li>Automated financial data workflows via Python/SQL ETL pipelines, improving reliability and cutting processing time by 60%, enabling faster user interactions</li>
+          <li>Built a PDF-to-structured-data pipeline using Python (PyPDF, pandas) to standardize Excel inputs into 9+ unified schema fields; implemented RAG-based search for natural language queries over financial documents used by 30K+ UC Berkeley students</li>
         </ul>
         <div class="tech-stack">
           <span class="tech-tag">Python</span>
           <span class="tech-tag">SQL</span>
           <span class="tech-tag">ETL</span>
-          <span class="tech-tag">PDF Processing</span>
-          <span class="tech-tag">Data Modeling</span>
-        </div>
-      </div>
-
-      <div class="experience-item">
-        <div class="company-name">USC Alfred E. Mann Institute</div>
-        <div class="job-title">Data Engineering Intern</div>
-        <ul>
-          <li>Engineered a geospatial ETL pipeline to ingest, clean, and standardize LA County's COVID-19 workplace-exposure datasets; integrated restaurant, employee count, and location metadata into a unified data model</li>
-          <li>Implemented geofencing logic to return all restaurants within a 2-mile radius and dynamically served exposure statistics through API-driven UI components</li>
-          <li>Automated data refresh workflows to continuously update exposure numbers and maintain accuracy during rapidly evolving COVID-19 conditions</li>
-        </ul>
-        <div class="tech-stack">
-          <span class="tech-tag">Python</span>
-          <span class="tech-tag">ETL</span>
-          <span class="tech-tag">Geospatial Analysis</span>
-          <span class="tech-tag">APIs</span>
-          <span class="tech-tag">Data Pipelines</span>
-        </div>
-      </div>
-
-      <div class="experience-item">
-        <div class="company-name">Better Ballot</div>
-        <div class="job-title">Full-Stack Developer</div>
-        <ul>
-          <li>Built a React + Flask tool that lets voters view local candidates by zip code, promoting civic engagement through accessible technology</li>
-          <li>Integrated external APIs to fetch real-time candidate information and display it in an intuitive, user-friendly interface</li>
-        </ul>
-        <div class="tech-stack">
-          <span class="tech-tag">React.js</span>
-          <span class="tech-tag">Flask</span>
-          <span class="tech-tag">JavaScript</span>
-          <span class="tech-tag">APIs</span>
-          <span class="tech-tag">Python</span>
+          <span class="tech-tag">RAG</span>
+          <span class="tech-tag">pandas</span>
+          <span class="tech-tag">PyPDF</span>
         </div>
       </div>
 
       <div class="experience-item">
         <div class="company-name">Afterwork</div>
-        <div class="job-title">Data Engineering Intern | June 2023 - Aug 2023</div>
+        <div class="job-title">Data Engineering Intern | June 2024 – Aug 2024</div>
         <ul>
-          <li>Developed machine learning techniques (k-means, decision trees, PCA, logistic regression) to perform unsupervised customer segmentation analysis on 200,000+ users, increasing product penetration by 10%</li>
-          <li>Built customer profiles of distinct user groups, enhancing targeted marketing strategies and improving user engagement by 15%</li>
+          <li>Developed ML algorithms (k-means, decision trees, PCA, logistic regression) to perform unsupervised customer segmentation on 200,000+ users, increasing product penetration by 10%</li>
+          <li>Built customer profiles of distinct user groups, enhancing targeted marketing and improving user engagement by 15%</li>
         </ul>
         <div class="tech-stack">
           <span class="tech-tag">Python</span>
@@ -560,21 +524,18 @@
       </div>
 
       <div class="experience-item">
-        <div class="company-name">UC Berkeley</div>
-        <div class="job-title">Data Science Research & Projects</div>
+        <div class="company-name">USC Alfred E. Mann Institute</div>
+        <div class="job-title">Data Engineering Intern | June 2023 – Aug 2023</div>
         <ul>
-          <li>Developed machine learning models achieving 87% accuracy in email spam classification using logistic regression</li>
-          <li>Built linear regression models for housing price prediction with RMSE ~$104,139, addressing fairness in taxation</li>
-          <li>Applied statistical methods including A/B testing, chi-square tests, and regression analysis to real-world datasets</li>
-          <li>Analyzed 8,000+ email samples to extract features and visualize classification patterns</li>
+          <li>Engineered a geospatial ETL pipeline with RAG integration for natural language queries over LA County's COVID-19 workplace exposure dataset; combined vector embeddings with restaurant, employee count, and location metadata into a searchable model</li>
+          <li>Implemented geofencing logic for restaurants within a 2-mile radius; served exposure statistics via API-driven UI components</li>
         </ul>
         <div class="tech-stack">
           <span class="tech-tag">Python</span>
-          <span class="tech-tag">Scikit-learn</span>
-          <span class="tech-tag">Pandas</span>
-          <span class="tech-tag">NumPy</span>
-          <span class="tech-tag">Matplotlib</span>
-          <span class="tech-tag">Statistical Analysis</span>
+          <span class="tech-tag">ETL</span>
+          <span class="tech-tag">RAG</span>
+          <span class="tech-tag">Geospatial Analysis</span>
+          <span class="tech-tag">APIs</span>
         </div>
       </div>
     </section>
@@ -593,6 +554,28 @@
       </div>
 
       <div class="projects-grid">
+        <div class="project" data-category="data-engineering">
+          <h3>MCP Server Tester</h3>
+          <p>Architected an end-to-end web application enabling developers to register MCP servers, discover available tools via JSON-RPC protocol, and run configurable latency experiments. Calculated and visualized performance metrics including min/max latency, percentiles (p50, p95), and success rates.</p>
+          <div class="tech-stack">
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">JSON-RPC</span>
+            <span class="tech-tag">Performance Testing</span>
+            <span class="tech-tag">Data Visualization</span>
+          </div>
+        </div>
+
+        <div class="project" data-category="data-engineering machine-learning">
+          <h3>DoorDash Wrap</h3>
+          <p>Built feature pipelines modeling spend behavior and ordering patterns; applied clustering to surface personalized restaurant recommendations and year-end insights.</p>
+          <div class="tech-stack">
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">Clustering</span>
+            <span class="tech-tag">Feature Engineering</span>
+            <span class="tech-tag">Recommendation Systems</span>
+          </div>
+        </div>
+
         <div class="project" data-category="machine-learning">
           <h3>Maximus AI Hedge Fund</h3>
           <p>AI-native hedge fund system composed of autonomous agents using LLMs for trading decisions, combining financial analysis with cutting-edge AI technology.</p>
@@ -702,20 +685,20 @@
       <h2 class="section-title">Skills</h2>
       <div class="skills-grid">
         <div class="skill-category">
-          <h4>Programming</h4>
-          <p>Python, SQL, JavaScript, Java, React, HTML/CSS</p>
+          <h4>Languages</h4>
+          <p>Python, SQL, Java, JavaScript, HTML, CSS</p>
         </div>
         <div class="skill-category">
-          <h4>Data Science</h4>
-          <p>Machine Learning, Statistical Analysis, Data Visualization, ETL Pipelines</p>
+          <h4>Libraries</h4>
+          <p>pandas, NumPy, scikit-learn, XGBoost, LightGBM, TensorFlow, Matplotlib, NLTK, spaCy</p>
         </div>
         <div class="skill-category">
-          <h4>Libraries & Tools</h4>
-          <p>Pandas, NumPy, Scikit-learn, Matplotlib, TensorFlow, RAGs</p>
+          <h4>Data Engineering</h4>
+          <p>ETL Pipelines, RAG, Vector Embeddings, MongoDB, PostgreSQL, Data Modeling</p>
         </div>
         <div class="skill-category">
-          <h4>Mathematics</h4>
-          <p>Linear Algebra, Probability Theory, Statistics, Optimization</p>
+          <h4>Web & APIs</h4>
+          <p>React, FastAPI, Flask, REST APIs, JSON-RPC</p>
         </div>
       </div>
     </section>
@@ -745,6 +728,59 @@
   </div>
 
   <script>
+    // Login functionality
+    // Password stored as SHA-256 hash — never store plaintext credentials in source.
+    // To update: run `echo -n 'yourpassword' | sha256sum` and replace the hash below.
+    const PASSWORD_HASH = '0ddfa57e3347a1dd4fcf619f086919f5995f3bbee432615d8fb4aaf000fd2be7';
+
+    async function sha256(str) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    const loginBtn = document.getElementById('login-btn');
+    const loginModal = document.getElementById('login-modal');
+    const loginSubmit = document.getElementById('login-submit');
+    const loginCancel = document.getElementById('login-cancel');
+    const loginPassword = document.getElementById('login-password');
+    const loginError = document.getElementById('login-error');
+
+    loginBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      loginModal.style.display = 'flex';
+      loginPassword.focus();
+    });
+
+    loginCancel.addEventListener('click', () => {
+      loginModal.style.display = 'none';
+      loginPassword.value = '';
+      loginError.style.display = 'none';
+    });
+
+    loginModal.addEventListener('click', (e) => {
+      if (e.target === loginModal) {
+        loginModal.style.display = 'none';
+        loginPassword.value = '';
+        loginError.style.display = 'none';
+      }
+    });
+
+    loginSubmit.addEventListener('click', async () => {
+      const hash = await sha256(loginPassword.value);
+      if (hash === PASSWORD_HASH) {
+        sessionStorage.setItem('authed', 'true');
+        window.location.href = 'dashboard.html';
+      } else {
+        loginError.style.display = 'block';
+        loginPassword.value = '';
+        loginPassword.focus();
+      }
+    });
+
+    loginPassword.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') loginSubmit.click();
+    });
+
     // Project filtering functionality
     const filterButtons = document.querySelectorAll('.filter-btn');
     const projects = document.querySelectorAll('.project');
