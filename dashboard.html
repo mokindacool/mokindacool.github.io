@@ -477,6 +477,20 @@
           <button class="btn-add" id="add-expense-btn">Add</button>
         </div>
         <div id="expense-list"></div>
+
+        <!-- Subscriptions -->
+        <div class="section-title" style="margin-bottom: 0.6rem;">Subscriptions</div>
+        <div class="input-row">
+          <input type="text" id="sub-name" placeholder="Subscription name" />
+          <input type="number" id="sub-amount" placeholder="$" min="0" />
+          <select id="sub-frequency">
+            <option value="monthly">Monthly</option>
+            <option value="biweekly">Bi-weekly</option>
+          </select>
+          <input type="date" id="sub-start-date" />
+          <button class="btn-add" id="add-sub-btn">Add</button>
+        </div>
+        <div id="subscription-list"></div>
       </div>
     </div>
 
@@ -567,6 +581,7 @@
   // ── State ──
   let paychecks  = load('dashboard_paychecks', []);
   let expenses   = load('dashboard_expenses', []);
+  let subscriptions = load('dashboard_subscriptions', []);
   let savingsGoal = load('dashboard_savings_goal', 0);
   let goals      = load('dashboard_goals', []);
   let rothContribs     = load('dashboard_roth_contributions', []);
@@ -778,6 +793,130 @@
 
   ['expense-name','expense-amount'].forEach(id =>
     document.getElementById(id).addEventListener('keydown', e => { if (e.key==='Enter') document.getElementById('add-expense-btn').click(); })
+  );
+
+  // ── Subscriptions ──
+  function fmtDate(d) {
+    const y = d.getFullYear(), m = String(d.getMonth() + 1).padStart(2, '0'), day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
+
+  function daysInMonth(year, monthIndex) {
+    return new Date(year, monthIndex + 1, 0).getDate();
+  }
+
+  function monthlyOccurrence(startDateStr, monthsElapsed) {
+    const start = new Date(startDateStr + 'T00:00:00');
+    const totalMonth = start.getMonth() + monthsElapsed;
+    const year = start.getFullYear() + Math.floor(totalMonth / 12);
+    const month = ((totalMonth % 12) + 12) % 12;
+    const day = Math.min(start.getDate(), daysInMonth(year, month));
+    return new Date(year, month, day);
+  }
+
+  function occurrenceAfter(sub, fromDateStr) {
+    const start = new Date(sub.startDate + 'T00:00:00');
+    if (!fromDateStr) return start;
+    const from = new Date(fromDateStr + 'T00:00:00');
+
+    if (sub.frequency === 'biweekly') {
+      let occ = start;
+      while (occ <= from) occ = new Date(occ.getTime() + 14 * 86400000);
+      return occ;
+    } else {
+      let m = 0, occ = monthlyOccurrence(sub.startDate, m);
+      while (occ <= from) { m++; occ = monthlyOccurrence(sub.startDate, m); }
+      return occ;
+    }
+  }
+
+  function nextDueDateStr(sub) {
+    return fmtDate(occurrenceAfter(sub, sub.lastGeneratedDate || null));
+  }
+
+  function generateDueSubscriptionExpenses() {
+    const today = todayStr();
+    let expensesChanged = false;
+
+    subscriptions.forEach(sub => {
+      let occStr = fmtDate(occurrenceAfter(sub, sub.lastGeneratedDate || null));
+      while (occStr <= today) {
+        const alreadyExists = expenses.some(e => e.subscriptionId === sub.id && e.date === occStr);
+        if (!alreadyExists) {
+          expenses.push({
+            id: Date.now().toString() + Math.random().toString(36).slice(2, 6),
+            name: sub.name, amount: sub.amount, category: 'subscriptions',
+            date: occStr, subscriptionId: sub.id
+          });
+          expensesChanged = true;
+        }
+        sub.lastGeneratedDate = occStr;
+        occStr = fmtDate(occurrenceAfter(sub, sub.lastGeneratedDate));
+      }
+    });
+
+    if (expensesChanged) save('dashboard_expenses', expenses);
+    save('dashboard_subscriptions', subscriptions);
+  }
+
+  function renderSubscriptions() {
+    const el = document.getElementById('subscription-list');
+    if (!subscriptions.length) { el.innerHTML = '<div class="empty-state">No subscriptions yet.</div>'; return; }
+    el.innerHTML = subscriptions.map(s => `
+      <div class="list-item">
+        <span class="item-label">${escHtml(s.name)}
+          <span class="cat-badge cat-subscriptions" style="margin-left:0.4rem;">${s.frequency === 'monthly' ? 'Monthly' : 'Bi-weekly'}</span>
+        </span>
+        <span class="item-date">Next: ${nextDueDateStr(s)}</span>
+        <span class="item-amount-red">${fmt(s.amount)}</span>
+        <button class="btn-remove" data-id="${s.id}" title="Remove">×</button>
+      </div>
+    `).join('');
+    el.querySelectorAll('.btn-remove').forEach(btn => {
+      btn.addEventListener('click', () => {
+        subscriptions = subscriptions.filter(s => s.id !== btn.dataset.id);
+        save('dashboard_subscriptions', subscriptions);
+        renderSubscriptions();
+      });
+    });
+  }
+
+  const subStartDate = document.getElementById('sub-start-date');
+  subStartDate.value = todayStr();
+
+  document.getElementById('add-sub-btn').addEventListener('click', () => {
+    const name      = document.getElementById('sub-name').value.trim();
+    const amount    = Number(document.getElementById('sub-amount').value);
+    const frequency = document.getElementById('sub-frequency').value;
+    const startDate = subStartDate.value || todayStr();
+    if (!name || !amount || !startDate) return;
+
+    const sub = { id: Date.now().toString(), name, amount, frequency, startDate, lastGeneratedDate: null };
+
+    // No-backfill: silently fast-forward the cursor past historical occurrences
+    // (before today) without materializing expenses for them.
+    const today = todayStr();
+    let occStr = fmtDate(occurrenceAfter(sub, null));
+    let guard = 0;
+    while (occStr < today && guard++ < 10000) {
+      sub.lastGeneratedDate = occStr;
+      occStr = fmtDate(occurrenceAfter(sub, sub.lastGeneratedDate));
+    }
+
+    subscriptions.push(sub);
+    save('dashboard_subscriptions', subscriptions);
+
+    document.getElementById('sub-name').value   = '';
+    document.getElementById('sub-amount').value = '';
+    subStartDate.value = todayStr();
+
+    generateDueSubscriptionExpenses();
+    renderSubscriptions();
+    renderExpenses(); renderSummary(); renderMonthlyReports();
+  });
+
+  ['sub-name','sub-amount'].forEach(id =>
+    document.getElementById(id).addEventListener('keydown', e => { if (e.key==='Enter') document.getElementById('add-sub-btn').click(); })
   );
 
   // ── Goals ──
@@ -1019,10 +1158,12 @@
   }
 
   // ── Init ──
+  generateDueSubscriptionExpenses();
   document.getElementById('period-label').textContent = 'Current period: ' + periodLabel(currentPeriodStart());
   renderSummary();
   renderPaychecks();
   renderExpenses();
+  renderSubscriptions();
   renderGoals();
   renderRoth();
   renderInvest('dashboard_hysa_contributions', hysaContribs, 'hysa-balance', 'hysa-history');
