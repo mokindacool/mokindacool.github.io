@@ -640,8 +640,13 @@
     return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
   function todayStr() {
-    return new Date().toISOString().slice(0, 10);
+    return fmtDate(new Date());
   }
+  function nowTimeStr() {
+    const d = new Date();
+    return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  }
+  const whenKey = x => (x.date || '') + ' ' + (x.time || '');
   function thisYear() { return new Date().getFullYear(); }
 
   // ── Period helpers (cycle resets on the 20th) ──
@@ -771,7 +776,7 @@
   function renderExpenses() {
     const el = document.getElementById('expense-list');
     const s = currentPeriodStart(), e = currentPeriodEnd();
-    const periodItems = expenses.filter(x => inPeriod(x.date, s, e));
+    const periodItems = expenses.filter(x => inPeriod(x.date, s, e)).sort((a, b) => whenKey(a).localeCompare(whenKey(b)));
     if (!periodItems.length) { el.innerHTML = '<div class="empty-state">No expenses this period.</div>'; return; }
 
     const grouped = {};
@@ -795,6 +800,7 @@
           ${items.map(e => `
             <div class="list-item" style="padding-left:0.5rem;">
               <span class="item-label">${escHtml(e.name)}</span>
+              <span class="item-date">${e.date || ''}${e.time ? ' ' + e.time : ''}</span>
               <span class="item-amount-red">${fmt(e.amount)}</span>
               <button class="btn-remove" data-id="${e.id}" title="Remove">×</button>
             </div>
@@ -826,7 +832,7 @@
     const amount   = Number(document.getElementById('expense-amount').value);
     const category = document.getElementById('expense-category').value;
     if (!name || !amount) return;
-    expenses.push({ id: Date.now().toString(), name, amount, category, date: todayStr() });
+    expenses.push({ id: Date.now().toString(), name, amount, category, date: todayStr(), time: nowTimeStr() });
     save('dashboard_expenses', expenses);
     document.getElementById('expense-name').value   = '';
     document.getElementById('expense-amount').value = '';
@@ -1203,7 +1209,7 @@
   }
 
   function openReportDetail(p) {
-    const inP = arr => arr.filter(x => inPeriod(x.date, p.start, p.end)).sort((a, b) => a.date.localeCompare(b.date));
+    const inP = arr => arr.filter(x => inPeriod(x.date, p.start, p.end)).sort((a, b) => whenKey(a).localeCompare(whenKey(b)));
     const section = (title, rows, cls) => `
       <h4>${title}</h4>
       ${rows.length ? rows.map(r => `
@@ -1222,7 +1228,7 @@
       <button class="report-modal-close" id="report-modal-close" title="Close">×</button>
       <h3>${p.label}</h3>
       ${section('Income · ' + fmt(r.income), inP(paychecks).map(x => ({ ...x, label: x.label || 'Paycheck' })), 'item-amount-green')}
-      ${section('Expenses · ' + fmt(r.totalExp), inP(expenses).map(x => ({ ...x, label: x.name + ' (' + (CAT_LABELS[x.category] || x.category) + ')' })), 'item-amount-red')}
+      ${section('Expenses · ' + fmt(r.totalExp), inP(expenses).map(x => ({ ...x, date: x.date + (x.time ? ' ' + x.time : ''), label: x.name + ' (' + (CAT_LABELS[x.category] || x.category) + ')' })), 'item-amount-red')}
       ${section('Invested · ' + fmt(r.invested), invested, 'item-amount-green')}
       <h4>Net · ${fmt(r.net)}</h4>`;
     document.getElementById('report-modal-bg').classList.add('open');
@@ -1264,6 +1270,7 @@
     rothContribs = load('dashboard_roth_contributions', []);
     hysaContribs = load('dashboard_hysa_contributions', []);
     brokerageContribs = load('dashboard_brokerage_contributions', []);
+    await mergeInbox();
     generateDueSubscriptionExpenses();
     renderSummary(); renderPaychecks(); renderExpenses(); renderSubscriptions(); renderGoals(); renderRoth();
     renderInvest('dashboard_hysa_contributions', hysaContribs, 'hysa-balance', 'hysa-history');
@@ -1271,9 +1278,40 @@
     renderMonthlyReports();
   }
 
+  // Move expenses logged from the iOS Shortcut (expense_inbox) into dashboard_expenses.
+  // Inbox rows are deleted only after the merged list has been uploaded.
+  async function mergeInbox() {
+    const { data, error } = await SB.from('expense_inbox').select('*');
+    if (error) throw error;
+    if (!data.length) return;
+    const ids = new Set(expenses.map(x => x.id));
+    data.forEach(r => {
+      const id = 'inbox-' + r.id;
+      if (!ids.has(id)) expenses.push({ id, name: r.name, amount: Number(r.amount), category: r.category, date: r.date, time: r.time });
+    });
+    localStorage.setItem('dashboard_expenses', JSON.stringify(expenses));
+    await pushKey('dashboard_expenses', expenses);
+    const { error: delError } = await SB.from('expense_inbox').delete().in('id', data.map(r => r.id));
+    if (delError) throw delError;
+  }
+
+  let syncing = false;
+  async function syncNow() {
+    if (syncing) return;
+    syncing = true;
+    try { await pullAll(); } finally { syncing = false; }
+  }
+
+  // Re-sync when the tab comes back into view, so Shortcut entries show up without a reload.
+  document.addEventListener('visibilitychange', async () => {
+    if (document.visibilityState !== 'visible') return;
+    const { data: { session } } = await SB.auth.getSession();
+    if (session) syncNow().catch(err => console.error('Sync failed', err));
+  });
+
   async function startSync() {
     const { data: { session } } = await SB.auth.getSession();
-    if (session) { await pullAll(); return; }
+    if (session) { await syncNow(); return; }
     const bg = document.getElementById('signin-bg');
     const err = document.getElementById('signin-error');
     bg.classList.add('open');
@@ -1286,7 +1324,7 @@
       if (error) { err.textContent = error.message; err.style.display = 'block'; return; }
       document.getElementById('signin-password').value = '';
       bg.classList.remove('open');
-      await pullAll();
+      await syncNow();
     };
     document.getElementById('signin-btn').addEventListener('click', submit);
     document.getElementById('signin-password').addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
