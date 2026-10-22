@@ -731,7 +731,7 @@
     // Login functionality
     // Password stored as SHA-256 hash — never store plaintext credentials in source.
     // To update: run `echo -n 'yourpassword' | sha256sum` and replace the hash below.
-    const PASSWORD_HASH = '0ddfa57e3347a1dd4fcf619f086919f5995f3bbee432615d8fb4aaf000fd2be7';
+    const PASSWORD_HASH = '17ad014ad47ce115c5cd7c786a712f7596c4f2a6e225e5974b8aad11d8a01b52';
 
     async function sha256(str) {
       const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
